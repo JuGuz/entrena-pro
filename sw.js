@@ -1,36 +1,35 @@
-const CACHE = 'entrena-pro-v2';
-const urls = ['/', '/index.html', '/manifest.json', '/offline.html', 'https://cdn.tailwindcss.com'];
+const CACHE_NAME = 'entrena-pro-v3';
+const urlsToCache = [
+  '/',
+  '/index.html',
+  '/manifest.json'
+  // Agrega aquí URLs de imágenes si quieres cachearlas explícitamente, pero el SW las cacheará dinámicamente al cargar
+];
 
-// Instalación: precacheo básico
-self.addEventListener('install', e => {
-  self.skipWaiting();
-  e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(urls))
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(urlsToCache))
+      .catch(err => console.log('Error en cache durante install:', err))
   );
 });
 
-// Activación: tomar control inmediatamente
-self.addEventListener('activate', e => {
-  e.waitUntil(self.clients.claim());
-});
-
-// Estrategia: cache first para recursos estáticos, con fallback offline
-self.addEventListener('fetch', e => {
-  if (e.request.method !== 'GET') return;
-  e.respondWith(
-    caches.match(e.request).then(cached => {
-      if (cached) return cached;
-      return fetch(e.request).then(networkRes => {
-        // Guardar en cache una copia de lo que venga por la red (si es exitoso)
-        try {
-          const clone = networkRes.clone();
-          caches.open(CACHE).then(cache => cache.put(e.request, clone));
-        } catch (err) { /* no bloquear por errores de cache */ }
-        return networkRes;
-      }).catch(() => {
-        // si falla la red, devolver página offline para navegación HTML
-        return caches.match('/offline.html');
-      });
-    })
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => {
+        if (response) return response;
+        return fetch(event.request)
+          .then(fetchResponse => {
+            if (!fetchResponse || fetchResponse.status !== 200 || fetchResponse.type !== 'basic') {
+              return fetchResponse;
+            }
+            var responseToCache = fetchResponse.clone();
+            caches.open(CACHE_NAME)
+              .then(cache => cache.put(event.request, responseToCache));
+            return fetchResponse;
+          })
+          .catch(() => new Response('<h1>Modo Offline</h1><p>Conéctate para cargar imágenes nuevas.</p>', { headers: { 'Content-Type': 'text/html' } }));
+      })
   );
 });
