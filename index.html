@@ -4,17 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Entrena Pro</title>
-    <meta name="description" content="Plan de entrenamiento progresivo de 3 meses con imágenes y consejos nutricionales.">
+    <meta name="description" content="Plan de entrenamiento progresivo de 3 meses - 100% offline">
     <meta name="theme-color" content="#2563eb">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💪</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .loader{border:4px solid #f3f3f3;border-top:4px solid #3498db;border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;margin:auto}
-        .loader-small{border:2px solid #f3f3f3;border-top:2px solid #22c55e;border-radius:50%;width:20px;height:20px;animation:spin 1s linear infinite;margin:8px auto}
-        @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-        .tab-active{border-bottom-color:#3b82f6;color:#3b82f6}
-        @media print{.no-print{display:none}body{background:white}.shadow-xl{box-shadow:none}}
+        .tab-active { border-bottom-color: #3b82f6; color: #3b82f6; }
+        @media print { .no-print { display: none; } body { background: white; } .shadow-xl { box-shadow: none; } }
     </style>
 </head>
 <body class="bg-gray-100 font-sans p-4 md:p-8">
@@ -22,114 +19,71 @@
     <header class="bg-blue-600 text-white p-6 text-center">
         <h1 class="text-3xl font-bold">Plan de Entrenamiento Progresivo</h1>
         <p class="text-blue-100 mt-1">3 Meses - 1 Día por Semana</p>
-        <p class="text-xs mt-2">Instala esta app en tu móvil</p>
+        <p class="text-xs mt-2 no-print">Instala en tu móvil · 100% sin conexión</p>
     </header>
+
     <main class="p-6 md:p-8">
+        <!-- Pestañas -->
         <div class="border-b border-gray-200 mb-6 no-print">
             <nav class="-mb-px flex space-x-4 md:space-x-8">
-                <button id="tab-mes1" class="tab-button tab-active py-3 px-1 border-b-2 font-medium text-sm" onclick="showTab('mes1')">Mes 1: Adaptación</button>
-                <button id="tab-mes2" class="tab-button py-3 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm" onclick="showTab('mes2')">Mes 2: Consolidación</button>
-                <button id="tab-mes3" class="tab-button py-3 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm" onclick="showTab('mes3')">Mes 3: Intensificación</button>
+                <button id="tab-mes1" class="tab-button tab-active py-3 px-1 border-b-2 font-medium text-sm" onclick="showTab('mes1')">Mes 1</button>
+                <button id="tab-mes2" class="tab-button py-3 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm" onclick="showTab('mes2')">Mes 2</button>
+                <button id="tab-mes3" class="tab-button py-3 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm" onclick="showTab('mes3')">Mes 3</button>
             </nav>
         </div>
+
+        <!-- Botón Imprimir -->
         <div class="text-center mb-6 no-print">
             <button onclick="window.print()" class="px-6 py-2 bg-green-600 text-white rounded-full hover:bg-green-700 shadow-md">
-                📄 Imprimir / PDF
+                📄 Imprimir / Guardar como PDF
             </button>
         </div>
+
+        <!-- Contenido -->
         <div id="tab-content-mes1" class="tab-content">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Rutina Mes 1: 2 Series</h2>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Mes 1: Adaptación (2 Series)</h2>
             <div id="plan-mes1" class="space-y-6"></div>
         </div>
         <div id="tab-content-mes2" class="tab-content hidden">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Rutina Mes 2: 3 Series</h2>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Mes 2: Consolidación (3 Series)</h2>
             <div id="plan-mes2" class="space-y-6"></div>
         </div>
         <div id="tab-content-mes3" class="tab-content hidden">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Rutina Mes 3: 3 Series</h2>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Mes 3: Intensificación (3 Series)</h2>
             <div id="plan-mes3" class="space-y-6"></div>
         </div>
     </main>
 </div>
 
 <script>
-if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 
-// Introduce tu API key aquí si quieres usar las APIs de generación
-const apiKey = ""; // <-- pon tu clave aquí
-const imageApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`;
-const textApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-
-// Datos del plan (puedes editar/desplegar más ejercicios)
+// === DATOS CON IMÁGENES BASE64 ===
 const planData = {
     mes1: [
-        { id: 'm1-e1', titulo: 'Sentadilla libre', reps: '2x12', tecnica: 'Pies al ancho de hombros, baja controlado, espalda recta.', prompt: 'Young adult performing bodyweight squats in a gym, clear form, neutral background, photorealistic' },
-        { id: 'm1-e2', titulo: 'Flexiones inclinadas', reps: '2x10', tecnica: 'Manos sobre banco, mantener línea recta del cuerpo.', prompt: 'Person doing incline push-ups on a bench, good posture, clean studio lighting' },
-        { id: 'm1-e3', titulo: 'Remo con banda', reps: '2x12', tecnica: 'Tira de la banda al pecho, hombros abajo.', prompt: 'Resistance band rows at home, person pulling band to chest, natural light' }
+        { id: "m1-zancadas", titulo: "Zancadas con Mancuernas", reps: "8-10 por pierna", tecnica: "Paso largo, rodilla trasera cerca del suelo, torso recto.", img: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjgwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzNDk4ZGIiIHN0cm9rZS13aWR0aD0iMTUiLz48L3N2Zz4=" },
+        { id: "m1-stepups", titulo: "Subidas al Escalón", reps: "8-10 por pierna", tecnica: "Sube con una pierna, baja controlado.", img: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSI1MCIgeT0iODAiIHdpZHRoPSIxMDAiIGhlaWdodD0iODAiIHJ4PSIxNSIgZmlsbD0iIzIyYzU1ZSIvPjwvc3ZnPg==" },
+        { id: "m1-remo", titulo: "Remo Australiano", reps: "8-10", tecnica: "Cuerpo recto, tira del pecho a la barra baja.", img: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNTAgNTBsNTAgNTBsNTAtNTB6IiBmaWxsPSJub25lIiBzdHJva2U9IiNmNTcwNmYiIHN0cm9rZS13aWR0aD0iMTUiLz48L3N2Zz4=" },
+        { id: "m1-flexiones", titulo: "Flexiones Inclinadas", reps: "8-10", tecnica: "Manos en banco, cuerpo recto.", img: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjcwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmYjc1MjMiIHN0cm9rZS13aWR0aD0iMjAiLz48L3N2Zz4=" },
+        { id: "m1-rodillas", titulo: "Elevación de Rodillas", reps: "10-15", tecnica: "Sentado, levanta rodillas al pecho.", img: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSI2MCIgeT0iNjAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgcng9IjIwIiBmaWxsPSIjM2I4MmY2Ii8+PC9zdmc+" }
     ],
     mes2: [
-        { id: 'm2-e1', titulo: 'Sentadilla con mancuerna', reps: '3x10', tecnica: 'Sostén una mancuerna frente al pecho, baja controlado.', prompt: 'Dumbbell goblet squat in small gym, focused expression, sharp detail' },
-        { id: 'm2-e2', titulo: 'Flexiones estándar', reps: '3x12', tecnica: 'Cuerpo recto, baja hasta 90 grados en codo.', prompt: 'Standard push-up on mat, photorealistic, good form' },
-        { id: 'm2-e3', titulo: 'Peso muerto rumano', reps: '3x10', tecnica: 'Mantén la espalda recta y rodillas ligeramente flexionadas.', prompt: 'Romanian deadlift with dumbbells, neutral background, clean composition' }
+        { id: "m2-zancadas-manc", titulo: "Zancadas con Mancuernas", reps: "10-12 por pierna", tecnica: "Aumenta profundidad y control.", img: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjgwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzNDk4ZGIiIHN0cm9rZS13aWR0aD0iMTUiLz48L3N2Zz4=" },
+        { id: "m2-zancadas", titulo: "Zancadas", reps: "8-10 por pierna", tecnica: "Rodillas a 90°, empuja fuerte.", img: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSI1MCIgeT0iODAiIHdpZHRoPSIxMDAiIGhlaWdodD0iODAiIHJ4PSIxNSIgZmlsbD0iIzIyYzU1ZSIvPjwvc3ZnPg==" },
+        { id: "m2-remo", titulo: "Remo Australiano", reps: "10-12", tecnica: "Barra más baja o pies adelante.", img: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNTAgNTBsNTAgNTBsNTAtNTB6IiBmaWxsPSJub25lIiBzdHJva2U9IiNmNTcwNmYiIHN0cm9rZS13aWR0aD0iMTUiLz48L3N2Zz4=" },
+        { id: "m2-flexiones", titulo: "Flexiones Inclinadas", reps: "10-12", tecnica: "Superficie más baja.", img: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjcwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmYjc1MjMiIHN0cm9rZS13aWR0aD0iMjAiLz48L3N2Zz4=" },
+        { id: "m2-abdominales", titulo: "Abdominales en Banco Inclinado", reps: "10-12", tecnica: "Pies enganchados, sube torso.", img: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSI2MCIgeT0iNjAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgcng9IjIwIiBmaWxsPSIjM2I4MmY2Ii8+PC9zdmc+" }
     ],
     mes3: [
-        { id: 'm3-e1', titulo: 'Sentadilla con salto', reps: '3x8', tecnica: 'Explosión en el ascenso, aterriza suave.', prompt: 'Explosive jump squat, athlete in motion, dynamic blur background' },
-        { id: 'm3-e2', titulo: 'Flexiones declinadas', reps: '3x10', tecnica: 'Pies elevados, aumenta la dificultad.', prompt: 'Decline push-ups with feet on bench, high-intensity look' },
-        { id: 'm3-e3', titulo: 'Remo con mancuernas', reps: '3x10', tecnica: 'Espalda plana, tira con el codo.', prompt: 'One-arm dumbbell row in gym, strong lighting, focused athlete' }
+        { id: "m3-zancadas-manc", titulo: "Zancadas con Mancuernas", reps: "12-15 por pierna", tecnica: "Rodilla trasera casi al suelo.", img: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjgwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzNDk4ZGIiIHN0cm9rZS13aWR0aD0iMTUiLz48L3N2Zz4=" },
+        { id: "m3-dominadas", titulo: "Dominadas Negativas", reps: "5-8", tecnica: "Baja lento (3-5 seg), sin pies.", img: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNTAgNTBsNTAgNTBsNTAtNTB6IiBmaWxsPSJub25lIiBzdHJva2U9IiNmNTcwNmYiIHN0cm9rZS13aWR0aD0iMTUiLz48L3N2Zz4=" },
+        { id: "m3-fondos", titulo: "Fondos Negativos", reps: "5-8", tecnica: "Baja lento, sin tocar suelo.", img: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjcwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmYjc1MjMiIHN0cm9rZS13aWR0aD0iMjAiLz48L3N2Zz4=" },
+        { id: "m3-piernas", titulo: "Elevaciones de Piernas", reps: "10-15", tecnica: "Piernas rectas, control al bajar.", img: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSI2MCIgeT0iNjAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgcng9IjIwIiBmaWxsPSIjM2I4MmY2Ii8+PC9zdmc+" },
+        { id: "m3-twists", titulo: "Giros Rusos de Pie", reps: "15-20 por lado", tecnica: "Gira torso, cadera fija.", img: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjgwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzNDk4ZGIiIHN0cm9rZS13aWR0aD0iMTUiLz48L3N2Zz4=" }
     ]
 };
-
-// === FUNCIONES (generateImage, generateNutritionTip, createExerciseCard, renderPlan, showTab) ===
-async function generateImage(prompt, elementId) {
-    const imgContainer = document.getElementById(elementId);
-    if (!imgContainer) return;
-    imgContainer.innerHTML = '<div class="loader"></div>';
-    if (!apiKey) { imgContainer.innerHTML = '<p class="text-xs text-gray-500">Sin API key</p>'; return; }
-    const payload = { instances: { prompt }, parameters: { sampleCount: 1 } };
-    let retries = 0, delay = 1000;
-    while (retries < 3) {
-        try {
-            const res = await fetch(imageApiUrl, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
-            if (!res.ok && ![429,500].includes(res.status)) {
-                imgContainer.innerHTML = '<p class="text-red-500 text-xs">Error API</p>'; return;
-            }
-            if (!res.ok) throw new Error();
-            const data = await res.json();
-            if (data.predictions?.[0]?.bytesBase64Encoded) {
-                imgContainer.innerHTML = `<img src="data:image/png;base64,${data.predictions[0].bytesBase64Encoded}" class="w-full h-auto rounded-md border">`;
-                return;
-            } else if (data.predictions?.[0]?.uri) {
-                imgContainer.innerHTML = `<img src="${data.predictions[0].uri}" class="w-full h-auto rounded-md border">`;
-                return;
-            }
-        } catch { retries++; if (retries < 3) await new Promise(r=>setTimeout(r,delay*=2)); }
-    }
-    imgContainer.innerHTML = '<p class="text-red-500 text-xs">Falló imagen</p>';
-}
-
-async function generateNutritionTip(title, id) {
-    const el = document.getElementById(id); if (!el) return;
-    el.innerHTML = '<div class="loader-small"></div>';
-    if (!apiKey) { el.innerHTML = '<p class="text-xs text-gray-500">Sin API key</p>'; return; }
-    const payload = {
-        contents: [{ parts: [{ text: `Consejo nutricional para: ${title}` }] }],
-        systemInstruction: { parts: [{ text: "Da un consejo corto y práctico de nutrición para este ejercicio." }] }
-    };
-    let retries = 0, delay = 1000;
-    while (retries < 3) {
-        try {
-            const res = await fetch(textApiUrl, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
-            if (!res.ok) throw new Error();
-            const data = await res.json();
-            const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "Come proteína después del entrenamiento y mantén hidratación.";
-            el.innerHTML = `<p class="text-xs text-green-700 p-2 bg-green-50 rounded-lg">${text}</p>`;
-            return;
-        } catch { retries++; if (retries < 3) await new Promise(r=>setTimeout(r,delay*=2)); }
-    }
-    el.innerHTML = '<p class="text-red-500 text-xs">Falló consejo</p>';
-}
 
 function createExerciseCard(ex) {
     return `
@@ -138,13 +92,13 @@ function createExerciseCard(ex) {
                 <h3 class="text-lg font-semibold text-blue-700">${ex.titulo}</h3>
                 <p class="text-sm font-medium text-gray-600">${ex.reps}</p>
             </div>
-            <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
                 <div>
                     <p class="text-sm text-gray-700">${ex.tecnica}</p>
-                    <button onclick="generateNutritionTip('${ex.titulo}', 'tip-${ex.id}')" class="mt-3 px-3 py-1 bg-green-500 text-white text-xs rounded-full hover:bg-green-600">Nutrición</button>
-                    <div id="tip-${ex.id}" class="mt-2 min-h-[30px]"></div>
                 </div>
-                <div id="${ex.id}-img" class="w-full min-h-40 bg-gray-100 rounded-md flex items-center justify-center"></div>
+                <div class="w-full">
+                    <img src="${ex.img}" alt="${ex.titulo}" class="w-full h-auto rounded-md border border-gray-200">
+                </div>
             </div>
         </div>`;
 }
@@ -153,28 +107,29 @@ function renderPlan() {
     document.getElementById('plan-mes1').innerHTML = planData.mes1.map(createExerciseCard).join('');
     document.getElementById('plan-mes2').innerHTML = planData.mes2.map(createExerciseCard).join('');
     document.getElementById('plan-mes3').innerHTML = planData.mes3.map(createExerciseCard).join('');
-    [...planData.mes1, ...planData.mes2, ...planData.mes3].forEach(ex => {
-        // Cargar imágenes en segundo plano
-        generateImage(ex.prompt, `${ex.id}-img`);
-    });
 }
 
 function showTab(id) {
     document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-    document.querySelectorAll('.tab-button').forEach(b => { b.classList.remove('tab-active'); b.classList.add('text-gray-500','border-transparent'); });
+    document.querySelectorAll('.tab-button').forEach(b => {
+        b.classList.remove('tab-active');
+        b.classList.add('text-gray-500', 'border-transparent');
+    });
     document.getElementById(`tab-content-${id}`).classList.remove('hidden');
     const btn = document.getElementById(`tab-${id}`);
-    btn.classList.add('tab-active'); btn.classList.remove('text-gray-500','border-transparent');
+    btn.classList.add('tab-active');
+    btn.classList.remove('text-gray-500', 'border-transparent');
 }
 
 window.onload = () => {
     renderPlan();
+    // Botón instalar
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', e => {
         e.preventDefault(); deferredPrompt = e;
         const btn = document.createElement('button');
-        btn.innerText = '📱 Instalar';
-        btn.className = 'fixed bottom-4 right-4 z-50 px-5 py-3 bg-blue-600 text-white rounded-full shadow-lg';
+        btn.innerText = '📱 Instalar App';
+        btn.className = 'fixed bottom-4 right-4 z-50 px-5 py-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 text-sm';
         btn.onclick = () => { deferredPrompt.prompt(); btn.remove(); };
         document.body.appendChild(btn);
     });
