@@ -56,14 +56,29 @@
 if('serviceWorker' in navigator){
     navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
-const apiKey = "";
+
+// Introduce tu API key aquí si quieres usar las APIs de generación
+const apiKey = ""; // <-- pon tu clave aquí
 const imageApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`;
 const textApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
+// Datos del plan (puedes editar/desplegar más ejercicios)
 const planData = {
-    mes1: [/* ... todo el planData del mensaje anterior ... */],
-    mes2: [/* ... */],
-    mes3: [/* ... */]
+    mes1: [
+        { id: 'm1-e1', titulo: 'Sentadilla libre', reps: '2x12', tecnica: 'Pies al ancho de hombros, baja controlado, espalda recta.', prompt: 'Young adult performing bodyweight squats in a gym, clear form, neutral background, photorealistic' },
+        { id: 'm1-e2', titulo: 'Flexiones inclinadas', reps: '2x10', tecnica: 'Manos sobre banco, mantener línea recta del cuerpo.', prompt: 'Person doing incline push-ups on a bench, good posture, clean studio lighting' },
+        { id: 'm1-e3', titulo: 'Remo con banda', reps: '2x12', tecnica: 'Tira de la banda al pecho, hombros abajo.', prompt: 'Resistance band rows at home, person pulling band to chest, natural light' }
+    ],
+    mes2: [
+        { id: 'm2-e1', titulo: 'Sentadilla con mancuerna', reps: '3x10', tecnica: 'Sostén una mancuerna frente al pecho, baja controlado.', prompt: 'Dumbbell goblet squat in small gym, focused expression, sharp detail' },
+        { id: 'm2-e2', titulo: 'Flexiones estándar', reps: '3x12', tecnica: 'Cuerpo recto, baja hasta 90 grados en codo.', prompt: 'Standard push-up on mat, photorealistic, good form' },
+        { id: 'm2-e3', titulo: 'Peso muerto rumano', reps: '3x10', tecnica: 'Mantén la espalda recta y rodillas ligeramente flexionadas.', prompt: 'Romanian deadlift with dumbbells, neutral background, clean composition' }
+    ],
+    mes3: [
+        { id: 'm3-e1', titulo: 'Sentadilla con salto', reps: '3x8', tecnica: 'Explosión en el ascenso, aterriza suave.', prompt: 'Explosive jump squat, athlete in motion, dynamic blur background' },
+        { id: 'm3-e2', titulo: 'Flexiones declinadas', reps: '3x10', tecnica: 'Pies elevados, aumenta la dificultad.', prompt: 'Decline push-ups with feet on bench, high-intensity look' },
+        { id: 'm3-e3', titulo: 'Remo con mancuernas', reps: '3x10', tecnica: 'Espalda plana, tira con el codo.', prompt: 'One-arm dumbbell row in gym, strong lighting, focused athlete' }
+    ]
 };
 
 // === FUNCIONES (generateImage, generateNutritionTip, createExerciseCard, renderPlan, showTab) ===
@@ -71,6 +86,7 @@ async function generateImage(prompt, elementId) {
     const imgContainer = document.getElementById(elementId);
     if (!imgContainer) return;
     imgContainer.innerHTML = '<div class="loader"></div>';
+    if (!apiKey) { imgContainer.innerHTML = '<p class="text-xs text-gray-500">Sin API key</p>'; return; }
     const payload = { instances: { prompt }, parameters: { sampleCount: 1 } };
     let retries = 0, delay = 1000;
     while (retries < 3) {
@@ -84,6 +100,9 @@ async function generateImage(prompt, elementId) {
             if (data.predictions?.[0]?.bytesBase64Encoded) {
                 imgContainer.innerHTML = `<img src="data:image/png;base64,${data.predictions[0].bytesBase64Encoded}" class="w-full h-auto rounded-md border">`;
                 return;
+            } else if (data.predictions?.[0]?.uri) {
+                imgContainer.innerHTML = `<img src="${data.predictions[0].uri}" class="w-full h-auto rounded-md border">`;
+                return;
             }
         } catch { retries++; if (retries < 3) await new Promise(r=>setTimeout(r,delay*=2)); }
     }
@@ -93,10 +112,10 @@ async function generateImage(prompt, elementId) {
 async function generateNutritionTip(title, id) {
     const el = document.getElementById(id); if (!el) return;
     el.innerHTML = '<div class="loader-small"></div>';
+    if (!apiKey) { el.innerHTML = '<p class="text-xs text-gray-500">Sin API key</p>'; return; }
     const payload = {
         contents: [{ parts: [{ text: `Consejo nutricional para: ${title}` }] }],
-        systemInstruction: { parts: [{ text: "Da un consejo corto y práctico de nutrición para este ejercicio." }] },
-        tools: [{ google_search: {} }]
+        systemInstruction: { parts: [{ text: "Da un consejo corto y práctico de nutrición para este ejercicio." }] }
     };
     let retries = 0, delay = 1000;
     while (retries < 3) {
@@ -104,7 +123,7 @@ async function generateNutritionTip(title, id) {
             const res = await fetch(textApiUrl, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
             if (!res.ok) throw new Error();
             const data = await res.json();
-            const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "Come proteína después.";
+            const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "Come proteína después del entrenamiento y mantén hidratación.";
             el.innerHTML = `<p class="text-xs text-green-700 p-2 bg-green-50 rounded-lg">${text}</p>`;
             return;
         } catch { retries++; if (retries < 3) await new Promise(r=>setTimeout(r,delay*=2)); }
@@ -134,7 +153,10 @@ function renderPlan() {
     document.getElementById('plan-mes1').innerHTML = planData.mes1.map(createExerciseCard).join('');
     document.getElementById('plan-mes2').innerHTML = planData.mes2.map(createExerciseCard).join('');
     document.getElementById('plan-mes3').innerHTML = planData.mes3.map(createExerciseCard).join('');
-    [...planData.mes1, ...planData.mes2, ...planData.mes3].forEach(ex => generateImage(ex.prompt, `${ex.id}-img`));
+    [...planData.mes1, ...planData.mes2, ...planData.mes3].forEach(ex => {
+        // Cargar imágenes en segundo plano
+        generateImage(ex.prompt, `${ex.id}-img`);
+    });
 }
 
 function showTab(id) {
