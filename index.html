@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plan de Entrenamiento Progresivo</title>
+    <title>Entrena Pro</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2563eb">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: auto; }
-        .loader-small { border: 2px solid #f3f3f3; border-top: 2px solid #22c55e; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; margin-top: 8px; margin-left: 8px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .tab-active { border-bottom-color: #3b82f6; color: #3b82f6; }
     </style>
 </head>
@@ -16,211 +15,103 @@
 
     <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-xl overflow-hidden">
         <header class="bg-blue-600 text-white p-6">
-            <h1 class="text-3xl font-bold text-center">Plan de Entrenamiento Progresivo</h1>
-            <p class="text-center text-blue-100 mt-1">3 Meses - 1 Día por Semana</p>
+            <h1 class="text-3xl font-bold text-center">Entrena Pro</h1>
+            <p class="text-center text-blue-100 mt-1">Plan de 3 Meses - 1 Día por Semana</p>
         </header>
 
         <main class="p-6 md:p-8">
             <div class="border-b border-gray-200 mb-6">
-                <nav class="-mb-px flex space-x-4 md:space-x-8" aria-label="Tabs">
-                    <button id="tab-mes1" class="tab-button tab-active whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm" onclick="showTab('mes1')">
-                        Mes 1: Adaptación
-                    </button>
-                    <button id="tab-mes2" class="tab-button whitespace-nowrap py-3 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm" onclick="showTab('mes2')">
-                        Mes 2: Consolidación
-                    </button>
-                    <button id="tab-mes3" class="tab-button whitespace-nowrap py-3 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm" onclick="showTab('mes3')">
-                        Mes 3: Intensificación
-                    </button>
+                <nav class="-mb-px flex space-x-4 md:space-x-8">
+                    <button class="tab-button tab-active py-3 px-1 border-b-2 font-medium text-sm" onclick="showTab('mes1')">Mes 1</button>
+                    <button class="tab-button py-3 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm" onclick="showTab('mes2')">Mes 2</button>
+                    <button class="tab-button py-3 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm" onclick="showTab('mes3')">Mes 3</button>
                 </nav>
             </div>
 
             <div id="tab-content-mes1" class="tab-content">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Rutina Mes 1: 2 Series por ejercicio</h2>
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Mes 1: Adaptación (2 series)</h2>
                 <div id="plan-mes1" class="space-y-6"></div>
             </div>
             <div id="tab-content-mes2" class="tab-content hidden">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Rutina Mes 2: 3 Series por ejercicio</h2>
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Mes 2: Consolidación (3 series)</h2>
                 <div id="plan-mes2" class="space-y-6"></div>
             </div>
             <div id="tab-content-mes3" class="tab-content hidden">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Rutina Mes 3: 3 Series por ejercicio</h2>
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Mes 3: Intensificación (3 series)</h2>
                 <div id="plan-mes3" class="space-y-6"></div>
             </div>
         </main>
     </div>
 
     <script>
-        // --- DATOS DEL PLAN (CON IMÁGENES DE TU ÁLBUM EN FLICKR) ---
         const planData = {
             mes1: [
-                {
-                    id: "m1-zancadas",
-                    titulo: "Zancadas con Mancuernas (Dumbbell Lunges)",
-                    reps: "8-10 repeticiones por pierna",
-                    tecnica: "Da un paso largo hacia adelante, bajando la rodilla trasera cerca del suelo. Mantén el torso recto. Usa mancuernas ligeras si es posible.",
-                    prompt: "a simple, clean line art diagram of a person doing a dumbbell lunge, focusing on form, white background, minimalist",
-                    img: "https://live.staticflickr.com/65535/54184197087_8e6d92b4e3_z.jpg"  // Zancadas con Mancuernas from your Flickr album
-                },
-                {
-                    id: "m1-stepups",
-                    titulo: "Subidas al Escalón (Step-ups)",
-                    reps: "8-10 repeticiones por pierna",
-                    tecnica: "Coloca un pie firme sobre un banco o plataforma. Impúlsate con esa pierna para subir tu cuerpo. Baja de forma controlada.",
-                    prompt: "a simple, clean line art diagram of a person doing a step-up onto a box, white background, minimalist",
-                    img: "https://live.staticflickr.com/65535/54184500009_1a5c9a4a94_z.jpg"  // Subidas al Escalón
-                },
-                {
-                    id: "m1-remo",
-                    titulo: "Remo Australiano",
-                    reps: "8-10 repeticiones",
-                    tecnica: "Agárrate a una barra baja, con el cuerpo estirado y los talones en el suelo. Tira de tu pecho hacia la barra.",
-                    prompt: "minimalist line art diagram of an inverted row (australian pull-up), person hanging from a low bar, body straight and rigid from head to heels, feet planted on the ground, pulling chest towards the bar, calisthenics, white background",
-                    img: "https://live.staticflickr.com/65535/54184197082_5b8e2d8f5b_z.jpg"  // Remo Australiano
-                },
-                {
-                    id: "m1-flexiones",
-                    titulo: "Flexiones Inclinadas",
-                    reps: "8-10 repeticiones",
-                    tecnica: "Coloca las manos en una barra o banco elevado. Baja el pecho hacia la barra manteniendo el cuerpo recto. Cuanto más alta la barra, más fácil.",
-                    prompt: "minimalist line art diagram of an incline push-up, person's hands elevated on a bench, feet on the floor, body straight line from head to heels, bodyweight exercise, simple technique illustration",
-                    img: "https://live.staticflickr.com/65535/54184500014_0c3d2c9d4e_z.jpg"  // Flexiones Inclinadas
-                },
-                {
-                    id: "m1-rodillas",
-                    titulo: "Elevación de Rodillas en Banco",
-                    reps: "10-15 repeticiones",
-                    tecnica: "Siéntate en el borde de un banco, inclínate hacia atrás y apóyate con las manos. Levanta las rodillas hacia el pecho.",
-                    prompt: "minimalist line art diagram of a person performing seated knee raises on a flat bench, upper body leaning back slightly, hands gripping the bench for support, drawing bent knees towards the chest, white background, core exercise",
-                    img: "https://live.staticflickr.com/65535/54184500019_7f6e8f6e6a_z.jpg"  // Elevación de Rodillas
-                }
+                { titulo: "Zancadas con Mancuernas", reps: "8-10 por pierna", tecnica: "Paso largo, rodilla trasera cerca del suelo. Usa mancuernas ligeras.", img: "https://github.com/JuGuz/entrena-pro/blob/main/Zancadas%20con%20Mancuernas%20(Dumbbell%20Lunges)%202.png?raw=true" },
+                { titulo: "Subidas al Escalón", reps: "8-10 por pierna", tecnica: "Sube con una pierna, baja controlado.", img: "https://github.com/JuGuz/entrena-pro/blob/main/Subidas%20al%20Escal%C3%B3n%20(Step-ups).png?raw=true" },
+                { titulo: "Remo Australiano", reps: "8-10", tecnica: "Cuerpo recto, tira del pecho a la barra baja.", img: "https://github.com/JuGuz/entrena-pro/blob/main/Remo%20Australiano.png?raw=true" },
+                { titulo: "Flexiones Inclinadas", reps: "8-10", tecnica: "Manos en banco elevado. Baja controlado.", img: "https://github.com/JuGuz/entrena-pro/blob/main/Flexiones%20Inclinadas%202.png?raw=true" },
+                { titulo: "Elevación de Rodillas en Banco", reps: "10-15", tecnica: "Siéntate, levanta rodillas al pecho.", img: "https://github.com/JuGuz/entrena-pro/blob/main/Elevaci%C3%B3n%20de%20Rodillas%20en%20Banco.png?raw=true" }
             ],
             mes2: [
-                {
-                    id: "m2-zancadas-manc",
-                    titulo: "Zancadas con Mancuernas (Dumbbell Lunges)",
-                    reps: "10-12 repeticiones por pierna",
-                    tecnica: "Aumenta ligeramente el peso de las mancuernas o concéntrate en la profundidad y el control del movimiento.",
-                    prompt: "a simple, clean line art diagram of a person doing a dumbbell lunge, showing depth, white background, minimalist",
-                    img: "https://live.staticflickr.com/65535/54184197087_8e6d92b4e3_z.jpg"  // Zancadas con Mancuernas (variation)
-                },
-                {
-                    id: "m2-zancadas",
-                    titulo: "Zancadas (Lunges)",
-                    reps: "8-10 repeticiones por pierna",
-                    tecnica: "Da un paso largo hacia adelante y baja la cadera hasta que ambas rodillas estén a 90 grados. Empuja para volver al inicio.",
-                    prompt: "a simple, clean line art diagram of a person doing a forward lunge, white background, minimalist",
-                    img: "https://live.staticflickr.com/65535/54184500004_3d2c9d4e_z.jpg"  // Zancadas
-                },
-                {
-                    id: "m2-remo",
-                    titulo: "Remo Australiano",
-                    reps: "10-12 repeticiones",
-                    tecnica: "Misma técnica. Para más dificultad, usa una barra más baja o coloca los pies más adelante.",
-                    prompt: "minimalist line art diagram of an inverted row (australian pull-up), person hanging from a low bar, body straight and rigid from head to heels, feet planted on the ground, pulling chest towards the bar, calisthenics, white background",
-                    img: "https://live.staticflickr.com/65535/54184197082_5b8e2d8f5b_z.jpg"  // Remo Australiano (variation)
-                },
-                {
-                    id: "m2-flexiones",
-                    titulo: "Flexiones Inclinadas",
-                    reps: "10-12 repeticiones",
-                    tecnica: "Intenta usar una superficie un poco más baja que en el Mes 1 para aumentar la dificultad.",
-                    prompt: "minimalist line art diagram of an incline push-up, person's hands elevated on a lower bench or step, feet on the floor, body straight line from head to heels, bodyweight exercise, simple technique illustration",
-                    img: "https://live.staticflickr.com/65535/54184500014_0c3d2c9d4e_z.jpg"  // Flexiones Inclinadas (variation)
-                },
-                {
-                    id: "m2-abdominales",
-                    titulo: "Abdominales en Banco Inclinado",
-                    reps: "10-12 repeticiones",
-                    tecnica: "Engancha los pies en la parte superior del banco inclinado. Sube el torso contrayendo el abdomen.",
-                    prompt: "a simple, clean line art diagram of a person doing a sit-up on an incline bench, white background, minimalist",
-                    img: "https://live.staticflickr.com/65535/54184500024_9f6e8f6e6a_z.jpg"  // Abdominales en Banco Inclinado
-                }
+                { titulo: "Zancadas con Mancuernas", reps: "10-12 por pierna", tecnica: "Más profundidad y control.", img: "https://github.com/JuGuz/entrena-pro/blob/main/Zancadas%20con%20Mancuernas%20(Dumbbell%20Lunges)%202.png?raw=true" },
+                { titulo: "Zancadas", reps: "8-10 por pierna", tecnica: "Sin peso, foco en forma.", img: "https://github.com/JuGuz/entrena-pro/blob/main/Zancadas%20(Lunges).png?raw=true" },
+                { titulo: "Remo Australiano", reps: "10-12", tecnica: "Barra más baja o pies adelante.", img: "https://github.com/JuGuz/entrena-pro/blob/main/Remo%20Australiano.png?raw=true" },
+                { titulo: "Flexiones Inclinadas", reps: "10-12", tecnica: "Banco más bajo.", img: "https://github.com/JuGuz/entrena-pro/blob/main/Flexiones%20Inclinadas%202.png?raw=true" },
+                { titulo: "Abdominales en Banco Inclinado", reps: "10-12", tecnica: "Pies enganchados, sube torso.", img: "https://github.com/JuGuz/entrena-pro/blob/main/Abdominales%20en%20Banco%20Inclinado.png?raw=true" }
             ],
             mes3: [
-                {
-                    id: "m3-zancadas-manc",
-                    titulo: "Zancadas con Mancuernas (Dumbbell Lunges)",
-                    reps: "12-15 repeticiones por pierna",
-                    tecnica: "Mantén un peso que te desafíe en el rango de repeticiones alto. La rodilla trasera debe flotar justo por encima del suelo.",
-                    prompt: "a simple, clean line art diagram of a person doing a dumbbell lunge with excellent form and dumbbells, white background, minimalist",
-                    img: "https://live.staticflickr.com/65535/54184197087_8e6d92b4e3_z.jpg"  // Zancadas con Mancuernas (advanced variation)
-                },
-                {
-                    id: "m3-dominadas",
-                    titulo: "Dominadas Negativas",
-                    reps: "5-8 repeticiones",
-                    tecnica: "Salta hasta la posición final (barbilla sobre la barra) y baja tu cuerpo lo más lentamente posible (3-5 segundos).",
-                    prompt: "minimalist line art diagram of a pull-up negative, person fully suspended from a high bar, starting with chin above the bar, slowly lowering down with controlled movement, feet are completely off the ground and not assisting, calisthenics, white background",
-                    img: "https://live.staticflickr.com/65535/54184500029_4f6e8f6e6a_z.jpg"  // Dominadas Negativas
-                },
-                {
-                    id: "m3-fondos",
-                    titulo: "Fondos Negativos",
-                    reps: "5-8 repeticiones",
-                    tecnica: "Súbete a las barras paralelas con brazos estirados. Baja lentamente (3-5 segundos) hasta que los hombros estén a la altura de los codos.",
-                    prompt: "minimalist line art diagram of a controlled negative dip on parallel bars, the person is completely suspended in the air and lowering slowly, feet are not touching the ground, straight arms at the starting position, calisthenics illustration",
-                    img: "https://live.staticflickr.com/65535/54184197092_2b8e2d8f5b_z.jpg"  // Fondos Negativos
-                },
-                {
-                    id: "m3-piernas",
-                    titulo: "Elevaciones de Piernas en Banco Inclinado",
-                    reps: "10-15 repeticiones",
-                    tecnica: "Túmbate en el banco inclinado, agárrate detrás de la cabeza. Sube las piernas rectas y bájalas de forma controlada.",
-                    prompt: "a simple, clean line art diagram of a person on an incline bench doing leg raises, white background, minimalist",
-                    img: "https://live.staticflickr.com/65535/54184500034_8f6e8f6e6a_z.jpg"  // Elevaciones de Piernas
-                },
-                {
-                    id: "m3-twists",
-                    titulo: "Giros Rusos de Pie (Standing Russian Twists)",
-                    reps: "15-20 repeticiones por lado",
-                    tecnica: "De pie, con las rodillas ligeramente flexionadas y un peso ligero (o sin él) en las manos, gira el torso de lado a lado. Mantén la cadera estable, el movimiento es desde el tronco.",
-                    prompt: "a simple, clean line art diagram of a person standing, holding a weight or ball, twisting their torso side-to-side for core work (standing russian twist), white background, minimalist",
-                    img: "https://live.staticflickr.com/65535/54184197097_0b8e2d8f5b_z.jpg"  // Giros Rusos de Pie
-                }
+                { titulo: "Zancadas con Mancuernas", reps: "12-15 por pierna", tecnica: "Peso desafiante, rodilla casi al suelo.", img: "https://github.com/JuGuz/entrena-pro/blob/main/Zancadas%20con%20Mancuernas%20(Dumbbell%20Lunges)%202.png?raw=true" },
+                { titulo: "Dominadas Negativas", reps: "5-8", tecnica: "Salta arriba, baja en 3-5 seg.", img: "https://github.com/JuGuz/entrena-pro/blob/main/Dominadas%20Negativas.png?raw=true" },
+                { titulo: "Fondos Negativos", reps: "5-8", tecnica: "Baja lento en paralelas.", img: "https://github.com/JuGuz/entrena-pro/blob/main/Fondos%20Negativos.png?raw=true" },
+                { titulo: "Elevaciones de Piernas en Banco Inclinado", reps: "10-15", tecnica: "Piernas rectas, control al bajar.", img: "https://github.com/JuGuz/entrena-pro/blob/main/Elevaciones%20de%20Piernas%20en%20Banco%20Inclinado.png?raw=true" },
+                { titulo: "Giros Rusos de Pie", reps: "15-20 por lado", tecnica: "Gira torso, cadera fija.", img: "https://github.com/JuGuz/entrena-pro/blob/main/Giros%20Rusos%20de%20Pie%20(Standing%20Russian%20Twists).png?raw=true" }
             ]
         };
 
-        // --- LÓGICA DE LA APLICACIÓN ---
-
-        function createExerciseCard(exercise) {
+        function createCard(e) {
             return `
                 <div class="border rounded-lg overflow-hidden shadow-sm">
                     <div class="p-4 bg-gray-50">
-                        <h3 class="text-lg font-semibold text-blue-700">${exercise.titulo}</h3>
-                        <p class="text-sm font-medium text-gray-600">${exercise.reps}</p>
+                        <h3 class="text-lg font-semibold text-blue-700">${e.titulo}</h3>
+                        <p class="text-sm font-medium text-gray-600">${e.reps}</p>
                     </div>
-                    <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 items-start"> 
-                        <div>
-                            <p class="text-sm text-gray-700">${exercise.tecnica}</p>
-                        </div>
-                        <div id="${exercise.id}-img" class="w-full min-h-40 flex items-center justify-center bg-gray-100 rounded-md">
-                            <img src="${exercise.img}" alt="${exercise.titulo}" class="w-full h-auto object-cover rounded-md border border-gray-200">
-                        </div>
+                    <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <p class="text-sm text-gray-700">${e.tecnica}</p>
+                        <img src="${e.img}" alt="${e.titulo}" class="w-full h-auto rounded border">
                     </div>
-                </div>
-            `;
+                </div>`;
         }
 
-        function renderPlan() {
-            document.getElementById('plan-mes1').innerHTML = planData.mes1.map(createExerciseCard).join('');
-            document.getElementById('plan-mes2').innerHTML = planData.mes2.map(createExerciseCard).join('');
-            document.getElementById('plan-mes3').innerHTML = planData.mes3.map(createExerciseCard).join('');
+        function render() {
+            document.getElementById('plan-mes1').innerHTML = planData.mes1.map(createCard).join('');
+            document.getElementById('plan-mes2').innerHTML = planData.mes2.map(createCard).join('');
+            document.getElementById('plan-mes3').innerHTML = planData.mes3.map(createCard).join('');
         }
 
-        function showTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.classList.remove('tab-active');
-                button.classList.add('text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300', 'border-transparent');
+        function showTab(id) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.tab-button').forEach(b => {
+                b.classList.remove('tab-active');
+                b.classList.add('text-gray-500', 'border-transparent');
             });
-            document.getElementById(`tab-content-${tabId}`).classList.remove('hidden');
-            const activeButton = document.getElementById(`tab-${tabId}`);
-            activeButton.classList.add('tab-active');
-            activeButton.classList.remove('text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300', 'border-transparent');
+            document.getElementById(`tab-content-${id}`).classList.remove('hidden');
+            event.target.classList.add('tab-active');
+            event.target.classList.remove('text-gray-500', 'border-transparent');
         }
 
-        window.onload = renderPlan;
+        window.onload = render;
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            setTimeout(() => {
+                if (confirm('¿Instalar Entrena Pro en tu móvil?')) {
+                    deferredPrompt.prompt();
+                }
+            }, 2000);
+        });
     </script>
 </body>
 </html>
