@@ -1,4 +1,4 @@
-const CACHE = 'entrena-pro-v1';
+const CACHE = 'entrena-pro-v2';
 const urls = ['/', '/index.html', '/manifest.json', '/offline.html', 'https://cdn.tailwindcss.com'];
 
 // Instalación: precacheo básico
