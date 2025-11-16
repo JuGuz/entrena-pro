@@ -1,35 +1,17 @@
-const CACHE_NAME = 'entrena-pro-v3';
-const urlsToCache = [
-  '/',
-  '/index.html',
-  '/manifest.json'
-  // Agrega aquí URLs de imágenes si quieres cachearlas explícitamente, pero el SW las cacheará dinámicamente al cargar
-];
+const CACHE = 'entrena-pro-v1';
+const staticAssets = ['/', '/index.html', '/manifest.json'];
 
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
-      .catch(err => console.log('Error en cache durante install:', err))
-  );
+self.addEventListener('install', e => {
+    e.waitUntil(caches.open(CACHE).then(cache => cache.addAll(staticAssets)));
 });
 
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        if (response) return response;
-        return fetch(event.request)
-          .then(fetchResponse => {
-            if (!fetchResponse || fetchResponse.status !== 200 || fetchResponse.type !== 'basic') {
-              return fetchResponse;
-            }
-            var responseToCache = fetchResponse.clone();
-            caches.open(CACHE_NAME)
-              .then(cache => cache.put(event.request, responseToCache));
-            return fetchResponse;
-          })
-          .catch(() => new Response('<h1>Modo Offline</h1><p>Conéctate para cargar imágenes nuevas.</p>', { headers: { 'Content-Type': 'text/html' } }));
-      })
-  );
+self.addEventListener('fetch', e => {
+    e.respondWith(
+        caches.match(e.request).then(res => res || fetch(e.request).then(fetchRes => {
+            return caches.open(CACHE).then(cache => {
+                cache.put(e.request, fetchRes.clone());
+                return fetchRes;
+            });
+        }).catch(() => new Response('Offline', {headers: {'Content-Type': 'text/plain'}}))
+    );
 });
